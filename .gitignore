@@ -1,0 +1,34 @@
+# JetBrains IDE (IDEA, WebStorm, PyCharm, etc)
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Пользовательские настройки
+*.bak
+*.tmp
+
+# Файлы модулей
+/.idea/modules.xml
+/.idea/workspace.xml
+
+# История поиска
+/.idea/search/
+
+# Директория сборки
+/out/
+/target/
+
+# Логи
+*.log
+
+# Файлы запуска
+/.idea/runConfigurations/
+
+# Плагины
+/.idea/plugins/
+
+# Прочие артефакты
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
