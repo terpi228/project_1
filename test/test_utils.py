@@ -5,7 +5,7 @@ from src.utils import reader_exel
 
 def test_search():
 
-    df = reader_exel('../data/TData.xls')
+    df = reader_exel("../data/transactions.xls")
 
     start = datetime(2024, 1, 1)
     end = datetime(2024, 1, 31)
