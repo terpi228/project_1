@@ -5,26 +5,45 @@ import pandas as pd
 from typing import List, Dict, Any
 from datetime import datetime, timedelta
 
+from datetime import datetime
+import pandas as pd
 
-def search_by_date_range(transactions_df, days=5):
-    """
-    Фильтрует DataFrame по дате
-    """
-    transactions_df = pd.read_excel(transactions_df)
-    df_copy = transactions_df.copy()
 
-    today = datetime.now()
-    start_date = today - timedelta(days=days)
+def search_by_date_range(transactions_df, month, year):
+    df = transactions_df.copy()
+    df['Дата платежа'] = pd.to_datetime(df['Дата платежа'], dayfirst=True, errors='coerce')
 
-    df_copy["Дата операции"] = pd.to_datetime(
-        df_copy["Дата операции"], format="%d.%m.%Y %H:%M:%S"
-    )
+    mask = (df['Дата платежа'].dt.month == month) & (df['Дата платежа'].dt.year == year)
+    return df[mask]
 
-    mask = (df_copy["Дата операции"] >= start_date) & (
-        df_copy["Дата операции"] <= today
-    )
 
-    return df_copy[mask]
+def category_of_cashback(transactions_df, month, year):
+    """Возвращает JSON с самыми выгодными категориями для выбора повышенного кэшбэка"""
+
+    month_df = search_by_date_range(transactions_df, month, year)
+
+    if month_df.empty:
+        return json.dumps({"сообщение": f"За {month:02d}.{year} транзакций не найдено"},
+                          ensure_ascii=False, indent=2)
+
+    spent_by_category = month_df.groupby('Категория')['Сумма платежа'].sum()
+
+    result = {}
+    for cat, spent in spent_by_category.items():
+        spent = int(spent)  # на случай float
+        result[cat] = {
+            "потрачено": spent,
+            "кэшбэк 5%": spent // 20,  # точнее, чем int(spent * 0.05)
+            "кэшбэк 10%": spent // 10
+        }
+
+    result_sorted = dict(sorted(result.items(),
+                                key=lambda x: x[1]["потрачено"],
+                                reverse=True))
+
+    return json.dumps(result_sorted, ensure_ascii=False, indent=2)
+
+
 
 
 def simple_search(search_query: str, transactions_df):
@@ -144,9 +163,15 @@ def investment_bank(
 
 
 if __name__ == "__main__":
+    # Защита от ошибок при чтении файла
+    try:
+        df = pd.read_excel("../data/operations.xls")
+        print(f"Загружено {len(df)} транзакций")
 
-    df = pd.read_excel("../data/TData.xls")
-    transactions = df.to_dict("records")
+        result = category_of_cashback(df, month=3, year=2024)
+        print(result)
 
-    result = investment_bank("2025-08", transactions, 50)
-    print(result)
+    except FileNotFoundError:
+        print("Ошибка: файл ../data/operations.xls не найден")
+    except Exception as e:
+        print(f"Что-то пошло не так: {e}")
