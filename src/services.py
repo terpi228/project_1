@@ -1,19 +1,18 @@
 import os
 import json
 import math
-import pandas as pd
 from typing import List, Dict, Any
-from datetime import datetime, timedelta
-
 from datetime import datetime
 import pandas as pd
 
 
 def search_by_date_range(transactions_df, month, year):
     df = transactions_df.copy()
-    df['Дата платежа'] = pd.to_datetime(df['Дата платежа'], dayfirst=True, errors='coerce')
+    df["Дата платежа"] = pd.to_datetime(
+        df["Дата платежа"], dayfirst=True, errors="coerce"
+    )
 
-    mask = (df['Дата платежа'].dt.month == month) & (df['Дата платежа'].dt.year == year)
+    mask = (df["Дата платежа"].dt.month == month) & (df["Дата платежа"].dt.year == year)
     return df[mask]
 
 
@@ -23,10 +22,13 @@ def category_of_cashback(transactions_df, month, year):
     month_df = search_by_date_range(transactions_df, month, year)
 
     if month_df.empty:
-        return json.dumps({"сообщение": f"За {month:02d}.{year} транзакций не найдено"},
-                          ensure_ascii=False, indent=2)
+        return json.dumps(
+            {"сообщение": f"За {month:02d}.{year} транзакций не найдено"},
+            ensure_ascii=False,
+            indent=2,
+        )
 
-    spent_by_category = month_df.groupby('Категория')['Сумма платежа'].sum()
+    spent_by_category = month_df.groupby("Категория")["Сумма платежа"].sum()
 
     result = {}
     for cat, spent in spent_by_category.items():
@@ -34,16 +36,14 @@ def category_of_cashback(transactions_df, month, year):
         result[cat] = {
             "потрачено": spent,
             "кэшбэк 5%": spent // 20,  # точнее, чем int(spent * 0.05)
-            "кэшбэк 10%": spent // 10
+            "кэшбэк 10%": spent // 10,
         }
 
-    result_sorted = dict(sorted(result.items(),
-                                key=lambda x: x[1]["потрачено"],
-                                reverse=True))
+    result_sorted = dict(
+        sorted(result.items(), key=lambda x: x[1]["потрачено"], reverse=True)
+    )
 
     return json.dumps(result_sorted, ensure_ascii=False, indent=2)
-
-
 
 
 def simple_search(search_query: str, transactions_df):

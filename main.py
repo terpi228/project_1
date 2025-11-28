@@ -3,8 +3,12 @@ import json
 import pandas as pd
 from pandas import read_excel
 
-from src.services import investment_bank, phone_search, simple_search, category_of_cashback
-import time
+from src.services import (
+    investment_bank,
+    phone_search,
+    simple_search,
+    category_of_cashback,
+)
 import os
 
 from src.utils import reader_exel
@@ -15,7 +19,7 @@ def clear():
 
 
 def demonstration_servis():
-   try:
+    try:
         while True:
             clear()
             print("╔════════════════════════════╗")
@@ -31,8 +35,8 @@ def demonstration_servis():
             user = int(input())
             if user == 1:
                 try:
-                    user_month = int(input('введите месяц: '))
-                    user_yera = int(input('введите год: '))
+                    user_month = int(input("введите месяц: "))
+                    user_yera = int(input("введите год: "))
                     df = pd.read_excel("data/operations.xls")
 
                     print(f"Загружено {len(df)} транзакций")
@@ -46,12 +50,13 @@ def demonstration_servis():
                     print(f"Что-то пошло не так: {e}")
                 input("Нажмите Enter чтобы продолжить...")
 
-
             elif user == 2:
 
                 df = read_excel("data/operations.xls")
                 result_2 = investment_bank("2025-06", df, 50)
-                print(f"8-2025 в этом месяце пользователь отложил бы в инвест копилку: {result_2}")
+                print(
+                    f"8-2025 в этом месяце пользователь отложил бы в инвест копилку: {result_2}"
+                )
                 input("Нажмите Enter чтобы продолжить...")
 
             elif user == 3:
@@ -68,7 +73,6 @@ def demonstration_servis():
 
                 input("Нажмите Enter чтобы продолжить...")
 
-
             elif user == 4:
                 res = phone_search("data/operations.xls")
                 print(res)
@@ -78,8 +82,9 @@ def demonstration_servis():
             elif user == 0:
                 print("Завершение программы")
                 break
-   except Exception as e:
-       print(F"Причина {e}")
+    except Exception as e:
+        print(f"Причина {e}")
+
 
 if __name__ == "__main__":
     demonstration_servis()

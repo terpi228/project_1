@@ -1,2 +1,14 @@
 [virtualenvs]
 in-project = true
+
+[tool.radon]
+exclude = [
+    "venv/*",
+    ".venv/*",
+    "*/venv/*",
+    "build/*",
+    "dist/*",
+    ".git/*",
+    "__pycache__/*",
+    ".pytest_cache/*"
+]
