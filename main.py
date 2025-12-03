@@ -17,20 +17,20 @@ from src.utils import reader_exel
 def clear():
     return os.system("cls" if os.name == "nt" else "clear")
 
-
 def demonstration_servis():
     try:
         while True:
             clear()
-            print("╔════════════════════════════╗")
-            print("║  ДЕМОНСТРАЦИОННАЯ ВЕРСИЯ   ║")
-            print("╠════════════════════════════╣")
-            print("║ 1.Выгодные категории.      ║")
-            print("║ 2.Инвесткопилка            ║")
-            print("║ 3.Простой поиск            ║")
-            print("║ 4.Поиск по номеру          ║")
-            print("║ 0.Выход                    ║")
-            print("╚════════════════════════════╝")
+
+            print('''
+            ╔════════════════════════════╗
+            ║ 1.Выгодные категории.      ║
+            ║ 2.Инвесткопилка            ║
+            ║ 3.Простой поиск            ║
+            ║ 4.Поиск по номеру          ║
+            ║ 0.Выход                    ║
+            ╚════════════════════════════╝
+                ''')
 
             user = int(input())
             if user == 1:
@@ -86,5 +86,63 @@ def demonstration_servis():
         print(f"Причина {e}")
 
 
+def demonstration_views():
+    while True:
+        clear()
+
+        print('''
+╔════════════════════════════╗
+║ 1. Страница «Главная»      ║
+║ 2. Страница «События»      ║
+╚════════════════════════════╝
+            ''')
+
+        user = int(input())
+        if user == 1:
+            pass
+
+        elif user == 0:
+            print("Завершение программы")
+            break
+
+def demonstration_reports():
+    while True:
+        clear()
+
+        print('''
+╔═══════════════════════════════╗
+1. Траты по категориям
+2. Траты по дням недели
+3. Траты в рабочий/выходной день
+╚═══════════════════════════════╝
+            ''')
+        user = int(input())
+        if user == 1:
+            pass
+
+        elif user == 0:
+            print("Завершение программы")
+            break
+
+
+def menu_selection():
+    clear()
+    print('''
+╔════════════════════════════╗
+║  ДЕМОНСТРАЦИОННАЯ ВЕРСИЯ   ║
+╚════════════════════════════╝
+1 - Веб-страницы
+2 - Сервисы
+3 - Отчеты
+          ''')
+    user = int(input('Ввод: '))
+    if user == 1:
+        demonstration_views()
+    elif user == 2:
+        demonstration_servis()
+    elif user == 3:
+        demonstration_reports()
+
+
 if __name__ == "__main__":
-    demonstration_servis()
+    menu_selection()
